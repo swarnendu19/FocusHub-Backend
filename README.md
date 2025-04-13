@@ -1,6 +1,6 @@
-# FocusHub Backend
+# FocusHub-Backend
 
-Welcome to the backend for **FocusHub**, a gamified time-tracking application. This monolith architecture powers features like time tracking, activity overviews, badge awards, timelines, project management, leaderboards, and user profiles. Built for scalability and performance, it integrates with a **React + Vite** frontend.
+Welcome to the backend for **TimeTrackr**, a gamified time-tracking application inspired by indiaction.club. This monolith powers features like time tracking, activity overviews, badge awards, timelines, project management (public/private), leaderboards, and user profiles. Built for rapid development, it integrates seamlessly with a **React + Vite** frontend, using **Express** for simplicity and familiarity.
 
 ---
 
@@ -26,68 +26,70 @@ Welcome to the backend for **FocusHub**, a gamified time-tracking application. T
 
 ## Features
 
-- **Time Tracking**: Log time spent on projects with start/end timestamps.
-- **Activity Overview**: Summarize time spent and recent activities.
-- **Badging System**: Award badges for milestones (e.g., 10 hours on a project).
-- **Timeline**: Chronological log of user actions (e.g., project creation).
-- **Project Management**: Create projects with public/private visibility.
-- **Leaderboard**: Rank users by time spent or badges earned.
-- **User Profiles**: Display user details, badges, and contributions.
+- **Time Tracking**: Log project time with start/end timestamps
+- **Activity Overview**: Summarize time spent and recent activities
+- **Badging System**: Award badges for milestones (e.g., 10 hours on a project)
+- **Timeline**: Show chronological user actions (e.g., project creation, badge earned)
+- **Project Management**: Create projects with public/private visibility
+- **Leaderboard**: Rank users by time spent or badges earned
+- **User Profiles**: Display user details, badges, and contributions
 
 ---
 
 ## Tech Stack
 
-- **Framework**: Express - Simple, fast Node.js framework.
-- **Database**: PostgreSQL + Prisma - Type-safe ORM.
-- **Cache/Queue**: Redis + BullMQ - Caching and async tasks.
-- **Authentication**: Custom JWT - Secure auth.
-- **Storage**: Cloudinary - Media storage.
-- **Deployment**: Vercel - Serverless scaling.
-- **Monitoring**: Sentry - Error tracking.
+- **Framework**: Express - Simple, fast Node.js framework for APIs
+- **Database**: PostgreSQL + Prisma - Relational database with type-safe ORM
+- **Cache/Queue**: Redis + BullMQ - Caching leaderboards, async badge awards
+- **Authentication**: Custom JWT - Free, secure signup/login
+- **Storage**: Cloudinary - Profile pictures and badge images
+- **Deployment**: Vercel - Serverless auto-scaling
+- **Monitoring**: Sentry - Error and performance tracking
+
 ---
 
 ## Architecture Overview
 
-The backend is a **monolith** for simplicity, with modular design for scalability. Below are the high-level (HLD) and low-level (LLD) designs.
+The backend is a **monolith** designed for simplicity, rapid iteration, and scalability, ideal for quick launches.
 
 ### High-Level Design (HLD)
 
 #### System Overview
 
-FocusHub enables users to track time, earn badges, manage projects, and compete on leaderboards. The backend is a single NestJS app exposing REST APIs, with async processing for badge awards and leaderboards.
+TimeTrackr lets users track time, earn badges, manage projects, and compete on leaderboards. The backend is a single **Express** app exposing REST APIs to the React + Vite frontend, with async processing for badge awards and leaderboard updates.
 
 #### Architecture Style
 
-- **Monolith**: Unified codebase for all features.
-- **API-Driven**: RESTful APIs for frontend.
-- **Event-Driven**: BullMQ for async tasks.
-- **Cloud-Native**: Vercel for scalability.
+- **Monolith**: All features in one codebase for fast development
+- **API-Driven**: RESTful APIs serve frontend data
+- **Event-Driven**: BullMQ handles async tasks (e.g., notifications)
+- **Cloud-Native**: Deployed on Vercel for scalability
 
 #### Components
 
-- **NestJS Monolith**: Handles users, projects, time tracking, badges, timelines, leaderboards.
-- **Authentication**: Custom JWT for login/signup and roles.
-- **Database**: PostgreSQL (via Prisma) for structured data.
-- **Cache/Queue**: Redis (caching), BullMQ (async tasks).
-- **Storage**: Cloudinary for images.
-- **Frontend**: React + Vite consumes APIs.
-- **Monitoring**: Sentry for errors/performance.
+- **Express Server**: Manages user auth, projects, time tracking, badges, timelines, and leaderboards
+- **Authentication**: Custom JWT for secure access and role-based permissions
+- **Database**: PostgreSQL (via Prisma) stores users, projects, and time entries
+- **Cache/Queue**: Redis caches data; BullMQ processes async tasks
+- **Storage**: Cloudinary handles media uploads
+- **Frontend Integration**: APIs consumed by React + Vite; WebSockets optional
+- **Monitoring**: Sentry tracks errors and performance
 
 #### Data Flow
 
-1. User logs in (`/auth/login`) → JWT issued.
-2. User creates project (`/projects`) → Saved to PostgreSQL.
-3. User tracks time (`/time-entries`) → Saved, BullMQ job queued.
-4. Badge awarded → Logged to timeline, notification sent.
-5. Leaderboard updated in Redis → Fetched via `/leaderboard`.
+1. User logs in (`/auth/login`) → JWT issued
+2. User creates project (`/projects`) → Stored in PostgreSQL
+3. User tracks time (`/time-entries`) → Saved, triggers BullMQ job
+4. Badge awarded → Logged to timeline
+5. Leaderboard updated in Redis → Fetched via `/leaderboard`
+6. Notifications queued (e.g., "You earned a badge!")
 
 #### Scalability
 
-- **Horizontal Scaling**: Multiple NestJS instances on Vercel.
-- **Caching**: Redis for low-latency reads.
-- **Database**: PostgreSQL read replicas.
-- **Queue**: BullMQ scales with Redis.
+- **Horizontal Scaling**: Multiple Express instances on Vercel
+- **Caching**: Redis reduces database load
+- **Database**: PostgreSQL read replicas for high reads
+- **Queue**: BullMQ scales async tasks
 
 #### HLD Diagram
 
@@ -156,3 +158,184 @@ model UserBadge {
   @@id([userId, badgeId])
 }
 ```
+
+#### Cache (Redis)
+
+- **Leaderboard**: Sorted set (leaderboard:global) with user IDs and scores
+- **Profiles**: Key-value (user:123:profile)
+- **Projects**: Key-value (project:456:details)
+
+#### API Endpoints
+
+- **Auth**:
+  - `POST /auth/signup`: `{ email, password, username }` → `{ access_token }`
+  - `POST /auth/login`: `{ email, password }` → `{ access_token }`
+- **Users**:
+  - `GET /users/:id/profile`: `{ username, email, badges }`
+- **Projects**:
+  - `POST /projects`: `{ name, description, visibility }` → `{ project_id }`
+  - `GET /projects/:id`: `{ name, description, visibility, members }`
+  - `PUT /projects/:id/visibility`: `{ visibility }` → `{ success: true }`
+- **Time Tracking**:
+  - `POST /time-entries`: `{ project_id, start_time }` → `{ entry_id }`
+  - `PUT /time-entries/:id/end`: `{ end_time }` → `{ duration_seconds }`
+  - `GET /users/:id/activity`: `{ projects: [{ project_id, total_time_spent }], recent_entries }`
+- **Badges**:
+  - `GET /badges`: `[{ badge_id, name, description, criteria }]`
+  - `GET /users/:id/badges`: `[{ badge_id, name, awarded_at }]`
+- **Timeline**:
+  - `GET /users/:id/timeline`: `[{ event_type, event_data, timestamp }]`
+- **Leaderboard**:
+  - `GET /leaderboard`: `[{ user_id, username, score, rank }]`
+
+#### Service Logic
+
+- **Time Tracking**:
+  - Start: Validate user/project, save TimeEntry, return entry_id
+  - End: Update end_time, calculate duration, queue time_entry_completed
+  - Activity: Aggregate TimeEntry by user/project, cache in Redis
+- **Badges**:
+  - Process time_entry_completed, award badges if criteria met, queue notification
+  - Cache badge list in Redis
+- **Leaderboard**:
+  - Update Redis sorted set on time/badge events
+  - Fetch top users, enrich with user data
+- **Timeline**:
+  - Log events (project_created, badge_earned) in PostgreSQL
+  - Fetch sorted by timestamp
+
+#### Async Processing
+
+- **BullMQ Queues**:
+  - time_entry_completed: `{ user_id, project_id, duration }`
+  - badge_awarded: `{ user_id, badge_id }`
+  - project_created: `{ project_id, user_id }`
+- **Workers**:
+  - Badge: Processes time entries
+  - Leaderboard: Updates scores
+  - Notification: Sends alerts
+
+#### Security
+
+- **Authentication**: JWT via jsonwebtoken middleware
+- **Authorization**: Role-based access (e.g., project owners only)
+- **Privacy**: Bcrypt for passwords, private project checks
+- **Rate Limiting**: express-rate-limit to prevent abuse
+
+#### Performance
+
+- **Indexes**: PostgreSQL (user_id, project_id, created_at)
+- **Caching**: Redis with 60s TTL for leaderboards, profiles
+- **Pagination**: Cursor-based for timelines, leaderboards
+- **Compression**: compression middleware for smaller responses
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js: v18+
+- PostgreSQL: v15+
+- Redis: v6+
+- Cloudinary: Account
+- Vercel: Account
+- Sentry: Account
+- Git
+
+### Installation
+
+```bash
+git clone https://github.com/your-org/timetrackr-backend.git
+cd timetrackr-backend
+npm install
+```
+
+Set up PostgreSQL:
+
+```bash
+createdb timetrackr
+npx prisma migrate dev
+```
+
+Configure Redis (e.g., Upstash), Cloudinary, and Sentry.
+
+### Environment Variables
+
+Create `.env`:
+
+```env
+DATABASE_URL="postgresql://user:password@localhost:5432/timetrackr?schema=public"
+REDIS_URL="redis://localhost:6379"
+JWT_SECRET="your-32-char-secret-here"
+CLOUDINARY_CLOUD_NAME="your-cloud-name"
+CLOUDINARY_API_KEY="your-api-key"
+CLOUDINARY_API_SECRET="your-api-secret"
+SENTRY_DSN="your-sentry-dsn"
+FRONTEND_URL="http://localhost:5173"
+```
+
+### Running the App
+
+```bash
+npm run start:dev
+```
+
+Access APIs at: http://localhost:3000
+
+Run tests:
+
+```bash
+npm run test
+```
+
+---
+
+## API Endpoints
+
+API docs generated via express-openapi (optional) at `/api-docs`.
+
+---
+
+## Deployment
+
+Deploy on Vercel:
+
+```bash
+vercel
+vercel --prod
+```
+
+Production Setup:
+
+- PostgreSQL: Supabase or similar
+- Redis: Upstash
+- HTTPS and CORS enabled via Express middleware
+
+---
+
+## Monitoring
+
+- Sentry: Tracks errors (e.g., failed /time-entries calls)
+- Vercel Analytics: Monitors API latency and usage
+- Prisma Pulse: Optional for database insights
+
+---
+
+## Contributing
+
+1. Fork the repo
+2. Create branch: `git checkout -b feature/your-feature`
+3. Commit: `git commit -m "Add feature"`
+4. Push: `git push origin feature/your-feature`
+5. Open PR
+
+Guidelines:
+
+- Write tests for routes
+- Use TypeScript for type safety
+- Document new endpoints
+
+---
+
+## License

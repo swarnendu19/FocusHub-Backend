@@ -4,6 +4,9 @@ Welcome to the backend for **FocusHub**, a gamified time-tracking application. T
 
 ---
 
+![ChatGPT Image Apr 13, 2025, 04_52_12 PM](https://github.com/user-attachments/assets/c3f51bbd-7222-40bf-a2cd-32d612616cb2)
+
+
 ## Table of Contents
 
 - [Features](#features)
@@ -86,6 +89,7 @@ FocusHub enables users to track time, earn badges, manage projects, and compete 
 - **Queue**: BullMQ scales with Redis.
 
 #### HLD Diagram
+![diagram-export-4-13-2025-4_58_28-PM](https://github.com/user-attachments/assets/c712a77d-b0de-4b43-aa1a-4626c1f43e8c)
 
 
 ### Low-Level Design (LLD)

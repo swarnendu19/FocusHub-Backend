@@ -1,6 +1,6 @@
-# TimeTrackr Backend
+# FocusHub Backend
 
-Welcome to the backend for **TimeTrackr**, a gamified time-tracking application inspired by indiaction.club. This monolith architecture powers features like time tracking, activity overviews, badge awards, timelines, project management, leaderboards, and user profiles. Built for scalability and performance, it integrates with a **React + Vite** frontend.
+Welcome to the backend for **FocusHub**, a gamified time-tracking application. This monolith architecture powers features like time tracking, activity overviews, badge awards, timelines, project management, leaderboards, and user profiles. Built for scalability and performance, it integrates with a **React + Vite** frontend.
 
 ---
 
@@ -55,7 +55,7 @@ The backend is a **monolith** for simplicity, with modular design for scalabilit
 ### High-Level Design (HLD)
 
 #### System Overview
-TimeTrackr enables users to track time, earn badges, manage projects, and compete on leaderboards. The backend is a single NestJS app exposing REST APIs, with async processing for badge awards and leaderboards.
+FocusHub enables users to track time, earn badges, manage projects, and compete on leaderboards. The backend is a single NestJS app exposing REST APIs, with async processing for badge awards and leaderboards.
 
 #### Architecture Style
 - **Monolith**: Unified codebase for all features.

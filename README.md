@@ -4,8 +4,6 @@ Welcome to the backend for **FocusHub**, a gamified time-tracking application. T
 
 ---
 
-![ChatGPT Image Apr 13, 2025, 04_52_12 PM](https://github.com/user-attachments/assets/c3f51bbd-7222-40bf-a2cd-32d612616cb2)
-
 ## Table of Contents
 
 - [Features](#features)
@@ -40,14 +38,13 @@ Welcome to the backend for **FocusHub**, a gamified time-tracking application. T
 
 ## Tech Stack
 
-- **Framework**: NestJS (Fastify adapter) - TypeScript-first, high-performance APIs.
-- **Database**: PostgreSQL + Prisma - Relational data with type-safe ORM.
-- **Cache/Queue**: Redis + BullMQ - Caching and async task processing.
-- **Authentication**: Custom JWT (NestJS + Passport) - Free, secure auth.
-- **Storage**: Cloudinary - Profile pictures and badge images.
-- **Deployment**: Vercel - Serverless, auto-scaling platform.
-- **Monitoring**: Sentry - Error and performance tracking.
-
+- **Framework**: Express - Simple, fast Node.js framework.
+- **Database**: PostgreSQL + Prisma - Type-safe ORM.
+- **Cache/Queue**: Redis + BullMQ - Caching and async tasks.
+- **Authentication**: Custom JWT - Secure auth.
+- **Storage**: Cloudinary - Media storage.
+- **Deployment**: Vercel - Serverless scaling.
+- **Monitoring**: Sentry - Error tracking.
 ---
 
 ## Architecture Overview

@@ -1,6 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import config from "./config/appConfig";
+import { initializeDatabase } from "./database/db";
  
 
 const app = express();
@@ -15,7 +16,7 @@ app.get("/", (req, res) => {
 });
 
 app.listen(config.PORT, async () => {
-     
+    await initializeDatabase();
     console.log(`Server listening on port ${config.PORT} in ${config.NODE_ENV}`);
   });
  

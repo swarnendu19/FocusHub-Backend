@@ -23,8 +23,8 @@ const createUser = async (
       email,
       name,
       password: await encryptPassword(password),
-      role
-    }
+      role,
+    },
   });
 };
 
@@ -53,7 +53,7 @@ const queryUsers = async <Key extends keyof User>(
     'role',
     'isEmailVerified',
     'createdAt',
-    'updatedAt'
+    'updatedAt',
   ] as Key[]
 ): Promise<Pick<User, Key>[]> => {
   const page = options.page ?? 1;
@@ -65,7 +65,7 @@ const queryUsers = async <Key extends keyof User>(
     select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {}),
     skip: page * limit,
     take: limit,
-    orderBy: sortBy ? { [sortBy]: sortType } : undefined
+    orderBy: sortBy ? { [sortBy]: sortType } : undefined,
   });
   return users as Pick<User, Key>[];
 };
@@ -86,12 +86,12 @@ const getUserById = async <Key extends keyof User>(
     'role',
     'isEmailVerified',
     'createdAt',
-    'updatedAt'
+    'updatedAt',
   ] as Key[]
 ): Promise<Pick<User, Key> | null> => {
   return prisma.user.findUnique({
     where: { id },
-    select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {})
+    select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {}),
   }) as Promise<Pick<User, Key> | null>;
 };
 
@@ -111,12 +111,12 @@ const getUserByEmail = async <Key extends keyof User>(
     'role',
     'isEmailVerified',
     'createdAt',
-    'updatedAt'
+    'updatedAt',
   ] as Key[]
 ): Promise<Pick<User, Key> | null> => {
   return prisma.user.findUnique({
     where: { email },
-    select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {})
+    select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {}),
   }) as Promise<Pick<User, Key> | null>;
 };
 
@@ -141,7 +141,7 @@ const updateUserById = async <Key extends keyof User>(
   const updatedUser = await prisma.user.update({
     where: { id: user.id },
     data: updateBody,
-    select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {})
+    select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {}),
   });
   return updatedUser as Pick<User, Key> | null;
 };
@@ -166,5 +166,5 @@ export default {
   getUserById,
   getUserByEmail,
   updateUserById,
-  deleteUserById
+  deleteUserById,
 };

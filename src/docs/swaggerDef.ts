@@ -8,14 +8,14 @@ const swaggerDef = {
     version,
     license: {
       name: 'MIT',
-      url: repository
-    }
+      url: repository,
+    },
   },
   servers: [
     {
-      url: `http://localhost:${config.port}/v1`
-    }
-  ]
+      url: `http://localhost:${config.port}/v1`,
+    },
+  ],
 };
 
 export default swaggerDef;

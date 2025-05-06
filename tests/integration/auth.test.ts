@@ -24,7 +24,7 @@ describe('Auth routes', () => {
     beforeEach(() => {
       newUser = {
         email: faker.internet.email().toLowerCase(),
-        password: 'password1'
+        password: 'password1',
       };
     });
 
@@ -40,7 +40,7 @@ describe('Auth routes', () => {
         name: null,
         email: newUser.email,
         role: Role.USER,
-        isEmailVerified: false
+        isEmailVerified: false,
       });
 
       const dbUser = await prisma.user.findUnique({ where: { id: res.body.user.id } });
@@ -50,12 +50,12 @@ describe('Auth routes', () => {
         name: null,
         email: newUser.email,
         role: Role.USER,
-        isEmailVerified: false
+        isEmailVerified: false,
       });
 
       expect(res.body.tokens).toEqual({
         access: { token: expect.anything(), expires: expect.anything() },
-        refresh: { token: expect.anything(), expires: expect.anything() }
+        refresh: { token: expect.anything(), expires: expect.anything() },
       });
     });
 
@@ -94,7 +94,7 @@ describe('Auth routes', () => {
       await insertUsers([userOne]);
       const loginCredentials = {
         email: userOne.email,
-        password: userOne.password
+        password: userOne.password,
       };
 
       const res = await request(app)
@@ -107,21 +107,21 @@ describe('Auth routes', () => {
         name: userOne.name,
         email: userOne.email,
         role: userOne.role,
-        isEmailVerified: userOne.isEmailVerified
+        isEmailVerified: userOne.isEmailVerified,
       });
 
       expect(res.body.user).toEqual(expect.not.objectContaining({ password: expect.anything() }));
 
       expect(res.body.tokens).toEqual({
         access: { token: expect.anything(), expires: expect.anything() },
-        refresh: { token: expect.anything(), expires: expect.anything() }
+        refresh: { token: expect.anything(), expires: expect.anything() },
       });
     });
 
     test('should return 401 error if there are no users with that email', async () => {
       const loginCredentials = {
         email: userOne.email,
-        password: userOne.password
+        password: userOne.password,
       };
 
       const res = await request(app)
@@ -131,7 +131,7 @@ describe('Auth routes', () => {
 
       expect(res.body).toEqual({
         code: httpStatus.UNAUTHORIZED,
-        message: 'Incorrect email or password'
+        message: 'Incorrect email or password',
       });
     });
 
@@ -139,7 +139,7 @@ describe('Auth routes', () => {
       await insertUsers([userOne]);
       const loginCredentials = {
         email: userOne.email,
-        password: 'wrongPassword1'
+        password: 'wrongPassword1',
       };
 
       const res = await request(app)
@@ -149,7 +149,7 @@ describe('Auth routes', () => {
 
       expect(res.body).toEqual({
         code: httpStatus.UNAUTHORIZED,
-        message: 'Incorrect email or password'
+        message: 'Incorrect email or password',
       });
     });
   });
@@ -216,7 +216,7 @@ describe('Auth routes', () => {
 
       expect(res.body).toEqual({
         access: { token: expect.anything(), expires: expect.anything() },
-        refresh: { token: expect.anything(), expires: expect.anything() }
+        refresh: { token: expect.anything(), expires: expect.anything() },
       });
 
       const dbRefreshTokenData = await prisma.token.findFirst({
@@ -224,13 +224,13 @@ describe('Auth routes', () => {
         select: {
           type: true,
           userId: true,
-          blacklisted: true
-        }
+          blacklisted: true,
+        },
       });
       expect(dbRefreshTokenData).toMatchObject({
         type: TokenType.REFRESH,
         userId: dbUserOne.id,
-        blacklisted: false
+        blacklisted: false,
       });
 
       const dbRefreshTokenCount = await prisma.token.count();
@@ -331,8 +331,8 @@ describe('Auth routes', () => {
       const dbResetPasswordTokenData = await prisma.token.findFirst({
         where: {
           token: resetPasswordToken,
-          userId: dbUserOne.id
-        }
+          userId: dbUserOne.id,
+        },
       });
       expect(dbResetPasswordTokenData).toBeDefined();
     });
@@ -381,8 +381,8 @@ describe('Auth routes', () => {
       const dbResetPasswordTokenCount = await prisma.token.count({
         where: {
           userId: dbUserOne.id,
-          type: TokenType.RESET_PASSWORD
-        }
+          type: TokenType.RESET_PASSWORD,
+        },
       });
       expect(dbResetPasswordTokenCount).toBe(0);
     });
@@ -532,8 +532,8 @@ describe('Auth routes', () => {
       const dbVerifyEmailToken = await prisma.token.findFirst({
         where: {
           token: verifyEmailToken,
-          userId: dbUserOne.id
-        }
+          userId: dbUserOne.id,
+        },
       });
 
       expect(dbVerifyEmailToken).toBeDefined();
@@ -574,8 +574,8 @@ describe('Auth routes', () => {
       const dbVerifyEmailToken = await prisma.token.count({
         where: {
           userId: dbUserOne.id,
-          type: TokenType.VERIFY_EMAIL
-        }
+          type: TokenType.VERIFY_EMAIL,
+        },
       });
       expect(dbVerifyEmailToken).toBe(0);
     });
@@ -656,7 +656,7 @@ describe('Auth middleware', () => {
       TokenType.ACCESS
     );
     const req = httpMocks.createRequest({
-      headers: { Authorization: `Bearer ${userOneAccessToken}` }
+      headers: { Authorization: `Bearer ${userOneAccessToken}` },
     });
     const next = jest.fn();
 
@@ -677,7 +677,7 @@ describe('Auth middleware', () => {
     expect(next).toHaveBeenCalledWith(
       expect.objectContaining({
         statusCode: httpStatus.UNAUTHORIZED,
-        message: 'Please authenticate'
+        message: 'Please authenticate',
       })
     );
   });
@@ -693,7 +693,7 @@ describe('Auth middleware', () => {
     expect(next).toHaveBeenCalledWith(
       expect.objectContaining({
         statusCode: httpStatus.UNAUTHORIZED,
-        message: 'Please authenticate'
+        message: 'Please authenticate',
       })
     );
   });
@@ -712,7 +712,7 @@ describe('Auth middleware', () => {
     expect(next).toHaveBeenCalledWith(
       expect.objectContaining({
         statusCode: httpStatus.UNAUTHORIZED,
-        message: 'Please authenticate'
+        message: 'Please authenticate',
       })
     );
   });
@@ -736,7 +736,7 @@ describe('Auth middleware', () => {
     expect(next).toHaveBeenCalledWith(
       expect.objectContaining({
         statusCode: httpStatus.UNAUTHORIZED,
-        message: 'Please authenticate'
+        message: 'Please authenticate',
       })
     );
   });
@@ -755,7 +755,7 @@ describe('Auth middleware', () => {
     expect(next).toHaveBeenCalledWith(
       expect.objectContaining({
         statusCode: httpStatus.UNAUTHORIZED,
-        message: 'Please authenticate'
+        message: 'Please authenticate',
       })
     );
   });
@@ -767,7 +767,7 @@ describe('Auth middleware', () => {
       TokenType.ACCESS
     );
     const req = httpMocks.createRequest({
-      headers: { Authorization: `Bearer ${userOneAccessToken}` }
+      headers: { Authorization: `Bearer ${userOneAccessToken}` },
     });
     const next = jest.fn();
 
@@ -777,7 +777,7 @@ describe('Auth middleware', () => {
     expect(next).toHaveBeenCalledWith(
       expect.objectContaining({
         statusCode: httpStatus.UNAUTHORIZED,
-        message: 'Please authenticate'
+        message: 'Please authenticate',
       })
     );
   });
@@ -791,7 +791,7 @@ describe('Auth middleware', () => {
       TokenType.ACCESS
     );
     const req = httpMocks.createRequest({
-      headers: { Authorization: `Bearer ${userOneAccessToken}` }
+      headers: { Authorization: `Bearer ${userOneAccessToken}` },
     });
     const next = jest.fn();
 
@@ -813,7 +813,7 @@ describe('Auth middleware', () => {
     );
     const req = httpMocks.createRequest({
       headers: { Authorization: `Bearer ${userOneAccessToken}` },
-      params: { userId: dbUserOne.id }
+      params: { userId: dbUserOne.id },
     });
     const next = jest.fn();
 
@@ -832,7 +832,7 @@ describe('Auth middleware', () => {
     );
     const req = httpMocks.createRequest({
       headers: { Authorization: `Bearer ${adminAccessToken}` },
-      params: { userId: dbAdmin.id }
+      params: { userId: dbAdmin.id },
     });
     const next = jest.fn();
 

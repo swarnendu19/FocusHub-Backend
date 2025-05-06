@@ -26,7 +26,7 @@ const loginUserWithEmailAndPassword = async (
     'role',
     'isEmailVerified',
     'createdAt',
-    'updatedAt'
+    'updatedAt',
   ]);
   if (!user || !(await isPasswordMatch(password, user.password as string))) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password');
@@ -44,8 +44,8 @@ const logout = async (refreshToken: string): Promise<void> => {
     where: {
       token: refreshToken,
       type: TokenType.REFRESH,
-      blacklisted: false
-    }
+      blacklisted: false,
+    },
   });
   if (!refreshTokenData) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Not found');
@@ -105,7 +105,7 @@ const verifyEmail = async (verifyEmailToken: string): Promise<void> => {
       TokenType.VERIFY_EMAIL
     );
     await prisma.token.deleteMany({
-      where: { userId: verifyEmailTokenData.userId, type: TokenType.VERIFY_EMAIL }
+      where: { userId: verifyEmailTokenData.userId, type: TokenType.VERIFY_EMAIL },
     });
     await userService.updateUserById(verifyEmailTokenData.userId, { isEmailVerified: true });
   } catch (error) {
@@ -120,5 +120,5 @@ export default {
   logout,
   refreshAuth,
   resetPassword,
-  verifyEmail
+  verifyEmail,
 };

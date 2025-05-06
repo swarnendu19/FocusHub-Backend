@@ -5,7 +5,7 @@ import { TokenType } from '@prisma/client';
 
 const jwtOptions = {
   secretOrKey: config.jwt.secret,
-  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
 };
 
 const jwtVerify: VerifyCallback = async (payload, done) => {
@@ -17,9 +17,9 @@ const jwtVerify: VerifyCallback = async (payload, done) => {
       select: {
         id: true,
         email: true,
-        name: true
+        name: true,
       },
-      where: { id: payload.sub }
+      where: { id: payload.sub },
     });
     if (!user) {
       return done(null, false);

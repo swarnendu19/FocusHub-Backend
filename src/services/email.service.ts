@@ -62,5 +62,5 @@ export default {
   transport,
   sendEmail,
   sendResetPasswordEmail,
-  sendVerificationEmail
+  sendVerificationEmail,
 };

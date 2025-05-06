@@ -26,7 +26,7 @@ const generateToken = (
     sub: userId,
     iat: moment().unix(),
     exp: expires.unix(),
-    type
+    type,
   };
   return jwt.sign(payload, secret);
 };
@@ -53,8 +53,8 @@ const saveToken = async (
       userId: userId,
       expires: expires.toDate(),
       type,
-      blacklisted
-    }
+      blacklisted,
+    },
   });
   return createdToken;
 };
@@ -69,7 +69,7 @@ const verifyToken = async (token: string, type: TokenType): Promise<Token> => {
   const payload = jwt.verify(token, config.jwt.secret);
   const userId = Number(payload.sub);
   const tokenData = await prisma.token.findFirst({
-    where: { token, type, userId, blacklisted: false }
+    where: { token, type, userId, blacklisted: false },
   });
   if (!tokenData) {
     throw new Error('Token not found');
@@ -93,12 +93,12 @@ const generateAuthTokens = async (user: { id: number }): Promise<AuthTokensRespo
   return {
     access: {
       token: accessToken,
-      expires: accessTokenExpires.toDate()
+      expires: accessTokenExpires.toDate(),
     },
     refresh: {
       token: refreshToken,
-      expires: refreshTokenExpires.toDate()
-    }
+      expires: refreshTokenExpires.toDate(),
+    },
   };
 };
 
@@ -136,5 +136,5 @@ export default {
   verifyToken,
   generateAuthTokens,
   generateResetPasswordToken,
-  generateVerifyEmailToken
+  generateVerifyEmailToken,
 };

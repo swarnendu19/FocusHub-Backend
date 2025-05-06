@@ -7,7 +7,7 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
   },
   "include": ["src/**/*.ts", "src/@types/**/*.ts"],
   "exclude": ["node_modules", "test", "dist", "**/*spec.ts"]

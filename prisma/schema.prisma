@@ -16,15 +16,19 @@ datasource db {
 }
 
 model User {
-  id              Int      @id @default(autoincrement())
-  email           String   @unique
-  name            String?
-  password        String
-  role            Role     @default(USER)
-  isEmailVerified Boolean  @default(false)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  Token           Token[]
+  id                 Int             @id @default(autoincrement())
+  email              String          @unique
+  name               String?
+  password           String
+  role               Role            @default(USER)
+  isEmailVerified    Boolean         @default(false)
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+  Token              Token[]
+  ownedProjects      Project[]
+  projectMemberships ProjectMember[]
+  timeEntries        TimeEntry[]
+  badges             UserBadge[]
 }
 
 model Token {
@@ -48,4 +52,59 @@ enum TokenType {
   REFRESH
   RESET_PASSWORD
   VERIFY_EMAIL
+}
+
+model Project {
+  id          Int             @id @default(autoincrement())
+  name        String
+  description String?
+  ownerId     Int
+  visibility  String          @default("private")
+  createdAt   DateTime        @default(now())
+  owner       User            @relation(fields: [ownerId], references: [id])
+  members     ProjectMember[]
+  timeEntries TimeEntry[]
+}
+
+model ProjectMember {
+  projectId Int
+  userId    Int
+  role      String  @default("contributor")
+  project   Project @relation(fields: [projectId], references: [id])
+  user      User    @relation(fields: [userId], references: [id])
+
+  @@id([projectId, userId])
+}
+
+model TimeEntry {
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  projectId Int
+  startTime DateTime
+  endTime   DateTime?
+  duration  Int?
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id])
+  project   Project   @relation(fields: [projectId], references: [id])
+
+  @@index([userId, projectId])
+}
+
+model Badge {
+  id          Int         @id @default(autoincrement())
+  name        String
+  description String?
+  criteria    Json
+  imageUrl    String?
+  users       UserBadge[]
+}
+
+model UserBadge {
+  userId    Int
+  badgeId   Int
+  awardedAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  badge     Badge    @relation(fields: [badgeId], references: [id])
+
+  @@id([userId, badgeId])
 }

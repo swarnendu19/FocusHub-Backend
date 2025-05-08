@@ -1,50 +1,50 @@
 import { Role } from '@prisma/client';
-import Joi from 'joi';
+import { z } from 'zod';
 import { password } from './custom.validation';
 
-const createUser = {
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required().custom(password),
-    name: Joi.string().required(),
-    role: Joi.string().required().valid(Role.USER, Role.ADMIN),
+const createUser = z.object({
+  body: z.object({
+    email: z.string().email('Invalid email'),
+    password: z.string().min(1, 'Password is required').refine(password, 'Invalid password format'),
+    name: z.string().min(1, 'Name is required'),
+    role: z.enum([Role.USER, Role.ADMIN]),
   }),
-};
+});
 
-const getUsers = {
-  query: Joi.object().keys({
-    name: Joi.string(),
-    role: Joi.string(),
-    sortBy: Joi.string(),
-    limit: Joi.number().integer(),
-    page: Joi.number().integer(),
+const getUsers = z.object({
+  query: z.object({
+    name: z.string().optional(),
+    role: z.string().optional(),
+    sortBy: z.string().optional(),
+    limit: z.number().int().optional(),
+    page: z.number().int().optional(),
   }),
-};
+});
 
-const getUser = {
-  params: Joi.object().keys({
-    userId: Joi.number().integer(),
+const getUser = z.object({
+  params: z.object({
+    userId: z.number().int(),
   }),
-};
+});
 
-const updateUser = {
-  params: Joi.object().keys({
-    userId: Joi.number().integer(),
+const updateUser = z.object({
+  params: z.object({
+    userId: z.number().int(),
   }),
-  body: Joi.object()
-    .keys({
-      email: Joi.string().email(),
-      password: Joi.string().custom(password),
-      name: Joi.string(),
+  body: z
+    .object({
+      email: z.string().email('Invalid email').optional(),
+      password: z.string().refine(password, 'Invalid password format').optional(),
+      name: z.string().optional(),
     })
-    .min(1),
-};
+    .refine((data) => Object.keys(data).length > 0, 'At least one field must be provided'),
+});
 
-const deleteUser = {
-  params: Joi.object().keys({
-    userId: Joi.number().integer(),
+const deleteUser = z.object({
+  params: z.object({
+    userId: z.number().int(),
   }),
-};
+});
 
 export default {
   createUser,

@@ -1,53 +1,53 @@
-import Joi from 'joi';
+import { z } from 'zod';
 import { password } from './custom.validation';
 
-const register = {
-  body: Joi.object().keys({
-    name: Joi.string().required(),
-    email: Joi.string().required().email(),
-    password: Joi.string().required().custom(password),
+const register = z.object({
+  body: z.object({
+    name: z.string().min(1, 'Name is required'),
+    email: z.string().email('Invalid email'),
+    password: z.string().min(1, 'Password is required').refine(password, 'Invalid password format'),
   }),
-};
+});
 
-const login = {
-  body: Joi.object().keys({
-    email: Joi.string().required(),
-    password: Joi.string().required(),
+const login = z.object({
+  body: z.object({
+    email: z.string().min(1, 'Email is required'),
+    password: z.string().min(1, 'Password is required'),
   }),
-};
+});
 
-const logout = {
-  body: Joi.object().keys({
-    refreshToken: Joi.string().required(),
+const logout = z.object({
+  body: z.object({
+    refreshToken: z.string().min(1, 'Refresh token is required'),
   }),
-};
+});
 
-const refreshTokens = {
-  body: Joi.object().keys({
-    refreshToken: Joi.string().required(),
+const refreshTokens = z.object({
+  body: z.object({
+    refreshToken: z.string().min(1, 'Refresh token is required'),
   }),
-};
+});
 
-const forgotPassword = {
-  body: Joi.object().keys({
-    email: Joi.string().email().required(),
+const forgotPassword = z.object({
+  body: z.object({
+    email: z.string().email('Invalid email'),
   }),
-};
+});
 
-const resetPassword = {
-  query: Joi.object().keys({
-    token: Joi.string().required(),
+const resetPassword = z.object({
+  query: z.object({
+    token: z.string().min(1, 'Token is required'),
   }),
-  body: Joi.object().keys({
-    password: Joi.string().required().custom(password),
+  body: z.object({
+    password: z.string().min(1, 'Password is required').refine(password, 'Invalid password format'),
   }),
-};
+});
 
-const verifyEmail = {
-  query: Joi.object().keys({
-    token: Joi.string().required(),
+const verifyEmail = z.object({
+  query: z.object({
+    token: z.string().min(1, 'Token is required'),
   }),
-};
+});
 
 export default {
   register,

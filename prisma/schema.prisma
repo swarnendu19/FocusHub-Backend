@@ -16,19 +16,18 @@ datasource db {
 }
 
 model User {
-  id                 Int             @id @default(autoincrement())
-  email              String          @unique
-  name               String?
-  password           String
-  role               Role            @default(USER)
-  isEmailVerified    Boolean         @default(false)
-  createdAt          DateTime        @default(now())
-  updatedAt          DateTime        @updatedAt
-  Token              Token[]
-  ownedProjects      Project[]
-  projectMemberships ProjectMember[]
-  timeEntries        TimeEntry[]
-  badges             UserBadge[]
+  id              Int         @id @default(autoincrement())
+  email           String      @unique
+  name            String?
+  password        String
+  role            Role        @default(USER)
+  isEmailVerified Boolean     @default(false)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  Token           Token[]
+  ownedProjects   Project[]
+  timeEntries     TimeEntry[]
+  badges          UserBadge[]
 }
 
 model Token {
@@ -55,25 +54,15 @@ enum TokenType {
 }
 
 model Project {
-  id          Int             @id @default(autoincrement())
+  id          Int         @id @default(autoincrement())
   name        String
   description String?
-  ownerId     Int
-  visibility  String          @default("private")
-  createdAt   DateTime        @default(now())
-  owner       User            @relation(fields: [ownerId], references: [id])
-  members     ProjectMember[]
+  userId      Int
+  visibility  String      @default("private")
+  projectUrl  String?
+  createdAt   DateTime    @default(now())
+  user        User        @relation(fields: [userId], references: [id])
   timeEntries TimeEntry[]
-}
-
-model ProjectMember {
-  projectId Int
-  userId    Int
-  role      String  @default("contributor")
-  project   Project @relation(fields: [projectId], references: [id])
-  user      User    @relation(fields: [userId], references: [id])
-
-  @@id([projectId, userId])
 }
 
 model TimeEntry {

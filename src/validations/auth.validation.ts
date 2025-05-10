@@ -5,8 +5,11 @@ const register = z.object({
   body: z.object({
     name: z.string().min(1, 'Name is required'),
     email: z.string().email('Invalid email'),
-    password: z.string().min(1, 'Password is required').refine(password, 'Invalid password format'),
-  }),
+    password: z
+      .string()
+      .min(8, 'Password must be at least 8 characters')
+      .refine(password, 'Password must contain at least one letter and one number'),
+  }).strict(),
 });
 
 const login = z.object({

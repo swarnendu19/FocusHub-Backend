@@ -1,15 +1,19 @@
 import httpStatus from 'http-status';
 import ApiError from '../utils/ApiError';
 import { NextFunction, Request, Response } from 'express';
-import pick from '../utils/pick';
 import { z } from 'zod';
 
 const validate = (schema: z.ZodType) => (req: Request, res: Response, next: NextFunction) => {
   try {
-    const validSchema = pick(schema, ['params', 'query', 'body']);
-    const obj = pick(req, Object.keys(validSchema));
-    const value = schema.parse(obj);
-    Object.assign(req, value);
+    let value;
+    // If the schema expects body, validate req.body directly
+    if (req.body && Object.keys(req.body).length > 0) {
+      value = schema.parse(req.body);
+      Object.assign(req, { body: value });
+    } else {
+      value = schema.parse({ ...req });
+      Object.assign(req, value);
+    }
     return next();
   } catch (error) {
     if (error instanceof z.ZodError) {

@@ -24,8 +24,8 @@ async function connectToDatabase() {
                 serverSelectionTimeoutMS: 10000,
                 maxPoolSize: 10,
                 minPoolSize: 5,
-                rentryWrites: true,
-                rentryReads: true,
+                retryWrites: true,
+                retryReads: true,
             });
 
             client.on('connected', ()=>{
@@ -52,3 +52,6 @@ async function connectToDatabase() {
     }
 
 }
+
+
+export { connectToDatabase };

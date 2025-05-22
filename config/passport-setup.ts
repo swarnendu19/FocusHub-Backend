@@ -1,7 +1,7 @@
 import passport, { type Profile } from 'passport';
 import {Strategy as GoogleStrategy, type VerifyCallback } from 'passport-google-oauth20';
 import { connectToDatabase } from '../db';
-import { ObjectId } from 'mongodb';
+import { ExplainVerbosity, ObjectId } from 'mongodb';
 import {type User } from '../types/User';
 
 
@@ -40,7 +40,7 @@ passport.use(
     new GoogleStrategy({
         clientID: process.env.GOOGLE_CLIENT_ID || '',
         clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
-        callbackURL: process.env.GOOGLE_CALLBACK_URL || 'http://localhost:5000/auth/google/callback',
+        callbackURL: process.env.GOOGLE_CALLBACK_URL || 'http://localhost:5000/api/auth/google/callback',
         proxy: true
     },
     async(_accessToken : string, _refreshToken: string, profile: Profile, done : VerifyCallback) => {
@@ -89,6 +89,8 @@ passport.use(
             newUser._id = result.insertedId;
 
             console.log("New user created with ID: ", newUser._id.toString());
+            console.log("User", newUser);
+            
 
             return done(null, newUser);
             
@@ -99,3 +101,6 @@ passport.use(
     }
 )
 );
+
+
+export default passport;

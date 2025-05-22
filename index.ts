@@ -5,7 +5,8 @@ import cors from 'cors';
 dotenv.config();
 
 import { connectToDatabase } from './db';
-
+import MongoStore from 'connect-mongo';
+import passport from './config/passport-setup';
 
 const app = express();
 
@@ -16,6 +17,29 @@ if(!mongoUri){
     process.exit(1);
 }
 
+app.use(
+    session({
+      secret: process.env.SESSION_SECRET || 'fallback_secret',
+      resave: false,
+      saveUninitialized: false,
+      store: MongoStore.create({
+        mongoUrl: mongoUri,
+        collectionName: 'sessions',
+        autoRemove: 'native',
+        touchAfter: 24 * 3600
+      }),
+      cookie: {
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 24 * 60 * 60 * 1000,
+        httpOnly: true,
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
+      }
+    })
+  );
+
+  // Passport initialization
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(
     cors({
@@ -26,6 +50,14 @@ app.use(
       exposedHeaders: ['Content-Type', 'Authorization'] // Exposed headers
     })
   );
+
+
+// Routes of this application
+
+import authorute from "./routes/auth/auth.route"
+
+app.use('/api/auth', authorute);
+
 
 const PORT = process.env.PORT || 5000;
 const startServer = async () => {

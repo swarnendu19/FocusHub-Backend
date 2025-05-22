@@ -15,5 +15,9 @@ const verifyOwnership = (req: Request, res: Response,next: NextFunction )=>{
         return res.status(403).json({ error: 'Unauthorized access' });
     }
     next();
-}
-export default {authenticateToken, verifyOwnership};
+} 
+
+export {
+  authenticateToken,
+  verifyOwnership
+};

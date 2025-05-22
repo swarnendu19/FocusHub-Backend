@@ -10,11 +10,12 @@ import { connectToDatabase } from './db';
 const app = express();
 
 app.use(express.json());
-const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017';
+const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017';
 if(!mongoUri){
     console.error("Mongo URI is not defined");
     process.exit(1);
 }
+
 
 app.use(
     cors({

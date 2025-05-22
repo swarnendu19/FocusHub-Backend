@@ -1,18 +1,18 @@
 import passport, { type Profile } from 'passport';
 import {Strategy as GoogleStrategy, type VerifyCallback } from 'passport-google-oauth20';
 import { connectToDatabase } from '../db';
-import { Db, ObjectId } from 'mongodb';
+import { ObjectId } from 'mongodb';
 import {type User } from '../types/User';
 
 
 
 passport.serializeUser((user: Express.User, done)=>{
     const u = user as User;
-    done(null, u._id.toString());
+    done(null, u._id?.toString());
 })
 passport.deserializeUser(async (id : string, done)=>{
     try {
-        const db:Db|undefined = await connectToDatabase();
+        const db = await connectToDatabase();
         const user = await db.collection<User>('users').findOne({ _id: new ObjectId(id) });
         if (!user) {
             return done(new Error('User not found'), null);
@@ -94,7 +94,7 @@ passport.use(
             
 
         } catch (error) {
-            return done(error, null);
+            return done(error as Error);
         }
     }
 )

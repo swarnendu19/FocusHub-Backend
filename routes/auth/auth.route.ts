@@ -39,7 +39,7 @@ router.get('/logout', (req, res)=>{
    });
 });
 
-router.get('/current_user', authenticateToken, (req: Request, res)=>{
+router.get('/current_user', authenticateToken, (req: Request, res: Response)=>{
     console.log('[Session] User verified:', {
         id: req.user._id,
         xp: req.user.xp || 0,

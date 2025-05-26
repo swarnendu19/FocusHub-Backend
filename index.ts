@@ -55,9 +55,10 @@ app.use(
 // Routes of this application
 
 import authorute from "./routes/auth/auth.route"
+import apiRoutes from "./routes/index"
 
 app.use('/api/auth', authorute);
-
+app.use('/api', apiRoutes);
 
 const PORT = process.env.PORT || 5000;
 const startServer = async () => {

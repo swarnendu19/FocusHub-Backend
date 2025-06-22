@@ -16,6 +16,7 @@ export interface SharedProjectEntry {
   }
   
   export interface UserDocument {
+    name: string;
     _id: ObjectId;
     tasks: Task[];
     sharedProjects?: SharedProjectEntry[];

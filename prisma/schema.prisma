@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id             String      @id @default(cuid())
+  email          String      @unique
+  password       String
+  name           String?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  
+  // Stats
+  level          Int         @default(1)
+  xp             Int         @default(0)
+  totalFocusTime Int         @default(0)
+  tasksCompleted Int         @default(0)
+  currentStreak  Int         @default(0)
+  avatarUrl      String?
+
+  adventures     Adventure[]
+  sessions       Session[]
+  badges         UserBadge[]
+}
+
+model Adventure {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  category    String
+  priority    String
+  progress    Int      @default(0)
+  timeSpent   Int      @default(0)
+  targetTime  Int
+  icon        String
+  color       String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sessions    Session[]
+}
+
+model Session {
+  id          String   @id @default(cuid())
+  duration    Int
+  date        DateTime @default(now())
+  completed   Boolean  @default(false)
+  
+  adventureId String
+  adventure   Adventure @relation(fields: [adventureId], references: [id], onDelete: Cascade)
+  
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Badge {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  icon        String
+  category    String
+  total       Int
+  bgColor     String
+  
+  users       UserBadge[]
+}
+
+model UserBadge {
+  id        String   @id @default(cuid())
+  userId    String
+  badgeId   String
+  earnedAt  DateTime @default(now())
+  progress  Int      @default(0)
+  earned    Boolean  @default(false)
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badge     Badge    @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, badgeId])
+}

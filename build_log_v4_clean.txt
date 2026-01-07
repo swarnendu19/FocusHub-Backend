@@ -1,0 +1,23 @@
+
+> focushub-app@0.1.0 build
+> next build
+
+▲ Next.js 16.1.1 (Turbopack)
+- Environments: .env
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 16.0s
+  Running TypeScript ...
+Failed to compile.
+
+./design/adventure-time-tracker/src/App.tsx:5:46
+Type error: Cannot find module 'react-router-dom' or its corresponding type declarations.
+
+[0m [90m 3 |[39m [36mimport[39m { [33mTooltipProvider[39m } [36mfrom[39m [32m"@/components/ui/tooltip"[39m[33m;[39m
+ [90m 4 |[39m [36mimport[39m { [33mQueryClient[39m[33m,[39m [33mQueryClientProvider[39m } [36mfrom[39m [32m"@tanstack/react-query"[39m[33m;[39m
+[31m[1m>[22m[39m[90m 5 |[39m [36mimport[39m { [33mBrowserRouter[39m[33m,[39m [33mRoutes[39m[33m,[39m [33mRoute[39m } [36mfrom[39m [32m"react-router-dom"[39m[33m;[39m
+ [90m   |[39m                                              [31m[1m^[22m[39m
+ [90m 6 |[39m [36mimport[39m [33mDashboard[39m [36mfrom[39m [32m"./pages/Dashboard"[39m[33m;[39m
+ [90m 7 |[39m [36mimport[39m [33mAdventure[39m [36mfrom[39m [32m"./pages/Adventure"[39m[33m;[39m
+ [90m 8 |[39m [36mimport[39m [33mBadges[39m [36mfrom[39m [32m"./pages/Badges"[39m[33m;[39m[0m
+Next.js build worker exited with code: 1 and signal: null

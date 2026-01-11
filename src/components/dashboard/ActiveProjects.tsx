@@ -8,7 +8,7 @@ export function ActiveProjects() {
     <div className="bg-card rounded-[1.5rem] border-2 border-forest p-6 shadow-hard flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <h3 className="text-xl font-bold text-foreground">Active Projects</h3>
-        <Link href="/adventure" className="text-primary hover:text-primary/80">
+        <Link href="/dashboard/adventure" className="text-primary hover:text-primary/80">
           <span className="material-symbols-outlined">arrow_forward</span>
         </Link>
       </div>

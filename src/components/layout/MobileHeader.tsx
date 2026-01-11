@@ -12,10 +12,10 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { path: '/', label: 'Dashboard', icon: 'cottage' },
-  { path: '/adventure', label: 'Adventure', icon: 'architecture' },
-  { path: '/badges', label: 'Badges', icon: 'military_tech' },
-  { path: '/leaderboard', label: 'Leaderboard', icon: 'trophy' },
+  { path: '/dashboard', label: 'Dashboard', icon: 'cottage' },
+  { path: '/dashboard/adventure', label: 'Adventure', icon: 'architecture' },
+  { path: '/dashboard/badges', label: 'Badges', icon: 'military_tech' },
+  { path: '/dashboard/leaderboard', label: 'Leaderboard', icon: 'trophy' },
 ];
 
 interface MobileHeaderProps {

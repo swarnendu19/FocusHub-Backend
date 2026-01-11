@@ -12,10 +12,10 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { path: '/', label: 'Dashboard', icon: 'cottage' },
-  { path: '/adventure', label: 'Adventure', icon: 'architecture' },
-  { path: '/badges', label: 'Badges', icon: 'military_tech' },
-  { path: '/leaderboard', label: 'Leaderboard', icon: 'trophy' },
+  { path: '/dashboard', label: 'Dashboard', icon: 'cottage' },
+  { path: '/dashboard/adventure', label: 'Adventure', icon: 'architecture' },
+  { path: '/dashboard/badges', label: 'Badges', icon: 'military_tech' },
+  { path: '/dashboard/leaderboard', label: 'Leaderboard', icon: 'trophy' },
 ];
 
 export function Sidebar() {
@@ -92,7 +92,7 @@ export function Sidebar() {
         <div className="flex flex-col gap-3">
           {/* New Adventure Button */}
           <Link
-            href="/adventure"
+            href="/dashboard/adventure"
             className="flex w-full cursor-pointer items-center justify-center rounded-2xl h-14 bg-card border-2 border-forest border-dashed text-foreground hover:bg-forest/5 hover:border-solid transition-all shadow-sm"
           >
             <span className="material-symbols-outlined mr-2">add_circle</span>

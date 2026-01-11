@@ -221,7 +221,7 @@ export default function LeaderboardPage() {
                             <div className="bg-card rounded-[2rem] border-2 border-forest shadow-hard p-6">
                                 <div className="flex items-center justify-between mb-4">
                                     <h3 className="text-xl font-bold text-foreground">Rare Badges</h3>
-                                    <Link className="text-primary hover:text-primary/80" href="/badges">
+                                    <Link className="text-primary hover:text-primary/80" href="/dashboard/badges">
                                         <span className="material-symbols-outlined">arrow_forward</span>
                                     </Link>
                                 </div>
